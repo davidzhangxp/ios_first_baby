@@ -98,7 +98,7 @@ class PlaceOrderViewController: UIViewController {
         if self.order != nil{
             
             orderLabel.text = "Order Number is: " + order.orderID
-            shippingAddressView.text = "Shipping Address: " + self.shipping.address + " " + self.shipping.city + self.shipping.postalCode
+            shippingAddressView.text = "Pickup Address: " + "19611 Fisher Ave, Poolesville, MD 20837"
             totalPriceView.text = "Total Price: \(order.totalPrice)" 
         }
     }

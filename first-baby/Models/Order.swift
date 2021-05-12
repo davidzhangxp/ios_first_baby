@@ -15,12 +15,12 @@ class Order {
     var taxPrice: Double
     var totalPrice: Double
     var isPaid: Bool
-    var payerID: String
     var orderID: String
     var date: Date
+    var shippingout: Bool
  
     var orderDictionary:NSDictionary{
-        return NSDictionary(objects: [self.userId,self.orderItems,self.shipping,self.itemsPrice,self.shippingPrice,self.taxPrice,self.totalPrice,self.isPaid,self.payerID,self.orderID,self.date], forKeys: [kUSERID as NSCopying, kORDERITEMS as NSCopying, kSHIPPING as NSCopying,kITEMSPRICE as NSCopying,kSHIPPINGPRICE as NSCopying,kTAXPRICE as NSCopying,kTOTALPRICE as NSCopying,kISPAID as NSCopying,kPAYERID as NSCopying,kORDERID as NSCopying,kDATE as NSCopying])
+        return NSDictionary(objects: [self.userId,self.orderItems,self.shipping,self.itemsPrice,self.shippingPrice,self.taxPrice,self.totalPrice,self.isPaid,self.orderID,self.date,self.shippingout], forKeys: [kUSERID as NSCopying, kORDERITEMS as NSCopying, kSHIPPING as NSCopying,kITEMSPRICE as NSCopying,kSHIPPINGPRICE as NSCopying,kTAXPRICE as NSCopying,kTOTALPRICE as NSCopying,kISPAID as NSCopying,kORDERID as NSCopying,kDATE as NSCopying,kSHIPPINGOUT as NSCopying])
     }
     init() {
         userId = ""
@@ -31,9 +31,9 @@ class Order {
         taxPrice = 0.0
         totalPrice = 0.0
         isPaid = false
-        payerID = ""
         orderID = ""
         date = Date()
+        shippingout = false
     }
     
     init(_dictionary: NSDictionary) {
@@ -45,9 +45,9 @@ class Order {
         taxPrice = _dictionary[kTAXPRICE] as? Double ?? 0.0
         totalPrice = _dictionary[kTOTALPRICE] as? Double ?? 0.0
         isPaid = _dictionary[kISPAID] as? Bool ?? false
-        payerID = _dictionary[kPAYERID] as? String ?? ""
         orderID = _dictionary[kORDERID] as? String ?? ""
         date = _dictionary[kDATE] as? Date ?? Date()
+        shippingout = _dictionary[kSHIPPINGOUT] as? Bool ?? false
     }
 
     

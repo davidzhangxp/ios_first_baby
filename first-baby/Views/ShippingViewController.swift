@@ -11,7 +11,7 @@ import ProgressHUD
 class ShippingViewController: UIViewController {
     var products:[Product] = []
     var totalPrice : Double!
-    var isChecked = false
+    var isChecked = true
     
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -84,19 +84,28 @@ class ShippingViewController: UIViewController {
     }()
     private let continueToPaymentButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Continue to payment", for: .normal)
+        button.setTitle("Continue to checkout", for: .normal)
         button.backgroundColor = .systemGreen
         button.layer.cornerRadius = 20
         return button
     }()
+    private let noteLabel:UILabel = {
+        let label = UILabel()
+        label.text = "House of Poolseville only provide pickup service, please pickup at 19611 Fisher Ave, Poolesville, MD 20837"
+        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.textColor = .black
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        return label
+    }()
     private let checkbox:UIButton = {
         let button = UIButton()
-        button.setBackgroundImage(UIImage(named: "unchecked-checkbox"), for: .normal)
+        button.setBackgroundImage(UIImage(named: "checked-checkbox"), for: .normal)
         return button
     }()
     private let pickupLabel:UILabel = {
         let label = UILabel()
-        label.text = "Pick Up(no need address)"
+        label.text = "Pick Up"
         label.font = .systemFont(ofSize: 18, weight: .medium)
         label.textColor = .blue
         label.textAlignment = .left
@@ -117,46 +126,47 @@ class ShippingViewController: UIViewController {
     private func setupUI(){
         view.addSubview(scrollView)
         scrollView.frame = view.bounds
-        scrollView.addSubview(firstNameField)
-        scrollView.addSubview(lastNameField)
-        scrollView.addSubview(addressField)
-        scrollView.addSubview(cityField)
-        scrollView.addSubview(postalCodeField)
-        scrollView.addSubview(countryField)
+//        scrollView.addSubview(firstNameField)
+//        scrollView.addSubview(lastNameField)
+//        scrollView.addSubview(addressField)
+//        scrollView.addSubview(cityField)
+//        scrollView.addSubview(postalCodeField)
+//        scrollView.addSubview(countryField)
+        scrollView.addSubview(noteLabel)
         scrollView.addSubview(checkbox)
         scrollView.addSubview(pickupLabel)
         scrollView.addSubview(continueToPaymentButton)
-        firstNameField.frame = CGRect(x: 20,
-                                      y: 30,
-                                      width: view.width - 40,
-                                      height: 36)
-        lastNameField.frame = CGRect(x: 20,
-                                     y: firstNameField.bottom + 8,
-                                     width: view.width - 40,
-                                     height: 36)
-        addressField.frame = CGRect(x: 20,
-                                    y: lastNameField.bottom + 8,
-                                    width: view.width - 40,
-                                    height: 36)
-        cityField.frame = CGRect(x: 20,
-                                 y: addressField.bottom + 8,
-                                 width: view.width - 40,
-                                 height: 36)
-        postalCodeField.frame = CGRect(x: 20,
-                                       y: cityField.bottom + 8,
-                                       width: view.width - 40,
-                                       height: 36)
-        countryField.frame = CGRect(x: 20,
-                                    y: postalCodeField.bottom + 8,
-                                    width: view.width - 40,
-                                    height: 36)
-        
+//        firstNameField.frame = CGRect(x: 20,
+//                                      y: 30,
+//                                      width: view.width - 40,
+//                                      height: 36)
+//        lastNameField.frame = CGRect(x: 20,
+//                                     y: firstNameField.bottom + 8,
+//                                     width: view.width - 40,
+//                                     height: 36)
+//        addressField.frame = CGRect(x: 20,
+//                                    y: lastNameField.bottom + 8,
+//                                    width: view.width - 40,
+//                                    height: 36)
+//        cityField.frame = CGRect(x: 20,
+//                                 y: addressField.bottom + 8,
+//                                 width: view.width - 40,
+//                                 height: 36)
+//        postalCodeField.frame = CGRect(x: 20,
+//                                       y: cityField.bottom + 8,
+//                                       width: view.width - 40,
+//                                       height: 36)
+//        countryField.frame = CGRect(x: 20,
+//                                    y: postalCodeField.bottom + 8,
+//                                    width: view.width - 40,
+//                                    height: 36)
+        noteLabel.frame = CGRect(x: 20, y: 20, width: view.width - 40 , height: 120)
         checkbox.frame = CGRect(x: 20,
-                                y: countryField.bottom + 8,
+                                y: noteLabel.bottom + 8,
                                 width: 26,
                                 height: 26)
         pickupLabel.frame = CGRect(x: checkbox.right + 8,
-                                   y: countryField.bottom + 8,
+                                   y: noteLabel.bottom + 8,
                                    width: view.width - 80,
                                    height: 26)
         

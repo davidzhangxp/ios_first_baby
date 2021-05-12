@@ -16,7 +16,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         view.register(ProductsTableViewCell.self, forCellReuseIdentifier: ProductsTableViewCell.identifier)
         return view
     }()
-    
+    private let searchBarButton :UIButton = {
+        let button = UIButton()
+        button.setTitle("Search", for: .normal)
+        button.setTitleColor(.darkGray, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        button.backgroundColor = .systemGray6
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.lightGray.cgColor
+        return button
+    }()
     var productArray:[Product] = []
     var productSection = [String]()
     var productDictionary = [String:[Product]]()
@@ -24,22 +33,22 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title="Homes"
+        title="Menu"
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
         // Do any additional setup after loading the view.
-        
-
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         loadProducts()
+        searchBarButton.addTarget(self, action: #selector(searchProduct), for: .touchUpInside)
     }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.addSubview(tableView)
-        tableView.frame = view.bounds
+        view.addSubview(searchBarButton)
+        searchBarButton.frame = CGRect(x: 0, y: 0, width: view.width, height: 32)
+        tableView.frame = CGRect(x: 0, y: searchBarButton.bottom + 2, width: view.width, height: view.height - 34)
+        
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.productSection.count
@@ -97,6 +106,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let vc = ProductViewController()
         vc.product = product
         navigationController?.pushViewController(vc, animated: true)
+    }
+    @objc private func searchProduct(){
+        let vc = SearchProductViewController()
+        let nav = UINavigationController(rootViewController: vc)
+        vc.products = productArray
+        nav.modalPresentationStyle = .fullScreen
+        present(nav, animated: true, completion: nil)
     }
 }
 

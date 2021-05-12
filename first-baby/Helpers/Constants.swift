@@ -50,6 +50,7 @@ public let kISPAID = "isPaid"
 public let kPAYERID = "payerID"
 public let kORDERID = "oderID"
 public let kDATE = "date"
+public let kSHIPPINGOUT = "shippingout"
 
 //Firestore
 public let kUSERS = "users"

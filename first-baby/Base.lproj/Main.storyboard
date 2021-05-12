@@ -113,11 +113,11 @@
             </objects>
             <point key="canvasLocation" x="480" y="310"/>
         </scene>
-        <!--profile-->
+        <!--Orders-->
         <scene sceneID="r5M-yA-ieI">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hQW-uG-VH7" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="profile" image="person.circle" catalog="system" id="HJx-Sa-AJf"/>
+                    <tabBarItem key="tabBarItem" title="Orders" image="person.circle" catalog="system" id="HJx-Sa-AJf"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="mtM-cp-uYv">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>

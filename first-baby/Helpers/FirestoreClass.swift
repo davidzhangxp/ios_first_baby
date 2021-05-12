@@ -183,4 +183,27 @@ class FirestoreClass {
                 }
             }
     }
+    
+    //download user all orders
+    func downloadAllOrdersFromFirebase(_ userId: String, completion: @escaping(_ orders: [Order]) -> Void){
+        
+        var orderArray:[Order]=[]
+        mFirestore.collection(kORDER).whereField(kUSERID, isEqualTo: userId).getDocuments { (snapshot, error) in
+           
+            guard let snapshot = snapshot else {
+                completion(orderArray)
+                return
+            }
+            if !snapshot.isEmpty && snapshot.documents.count > 0 {
+                for document in snapshot.documents{
+                    let order = Order(_dictionary: document.data() as NSDictionary)
+                    orderArray.append(order)
+                }
+                
+                completion(orderArray)
+            } else{
+            completion(orderArray)
+            }
+        }
+    }
 }

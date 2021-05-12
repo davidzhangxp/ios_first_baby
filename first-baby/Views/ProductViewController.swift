@@ -151,7 +151,7 @@ class ProductViewController: UIViewController {
                             }
                         }
                     }
-                    ProgressHUD.showSuccess("product exist,update your basket")
+                    ProgressHUD.showSuccess("already exist,update your basket")
                     
                 }
             }
@@ -177,6 +177,6 @@ class ProductViewController: UIViewController {
         }else{
             FirestoreClass().saveBasketToFirestore(basket: newBasket)
         }
-        ProgressHUD.showSuccess("product add to you basket")
+        ProgressHUD.showSuccess("Add to you basket")
     }
 }

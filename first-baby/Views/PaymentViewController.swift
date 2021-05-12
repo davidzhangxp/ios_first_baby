@@ -78,7 +78,7 @@ class PaymentViewController: UIViewController {
 
     private let paymentButton: UIButton={
         let button = UIButton()
-        button.setTitle("Continue to pay", for: .normal)
+        button.setTitle("Place Order", for: .normal)
         button.backgroundColor = .systemGreen
         button.layer.cornerRadius = 20
         return button
@@ -91,8 +91,8 @@ class PaymentViewController: UIViewController {
         tableView.delegate = self
         // Do any additional setup after loading the view.
         loadPriceAddress()
-        paymentButton.addTarget(self, action: #selector(payPalButtonTapped), for: .touchUpInside)
-        braintreeClient = BTAPIClient(authorization: "sandbox_fwvpzxcj_rdzzpgb6vh7whv9b")
+        paymentButton.addTarget(self, action: #selector(placeOrder), for: .touchUpInside)
+//        braintreeClient = BTAPIClient(authorization: "sandbox_fwvpzxcj_rdzzpgb6vh7whv9b")
         
     }
     
@@ -139,7 +139,7 @@ class PaymentViewController: UIViewController {
             totalPrice = itemPrice + taxPrice + shippingPrice
             self.paymentPrice = totalPrice
             totalPriceView.text = "Total price :" + "$\(totalPrice)"
-            shippingAddressView.text = "Shipping Address: Pick up"
+            shippingAddressView.text = "For customer's security, please pay your order at restaurant when you pick up your food!"
         }else{
             if itemPrice > 100.0 {
                 shippingPrice = 0.0
@@ -161,51 +161,90 @@ class PaymentViewController: UIViewController {
         
     }
 
-    @objc func payPalButtonTapped(){
-        let payPalDriver = BTPayPalDriver(apiClient: self.braintreeClient)
- 
-
-        let request = BTPayPalCheckoutRequest(amount: "1.00")
-        // or let request = BTPayPalVaultRequest()
-
-        payPalDriver.tokenizePayPalAccount(with: request) { (tokenizedPayPalAccount, error) in
-            guard let tokenizedPayPalAccount = tokenizedPayPalAccount else {
-                if let error = error {
-                    // Handle error
-                } else {
-                    // User canceled
-                }
-                return
+//    @objc func payPalButtonTapped(){
+//        let payPalDriver = BTPayPalDriver(apiClient: self.braintreeClient)
+// 
+//
+//        let request = BTPayPalCheckoutRequest(amount: "1.00")
+//        // or let request = BTPayPalVaultRequest()
+//
+//        payPalDriver.tokenizePayPalAccount(with: request) { (tokenizedPayPalAccount, error) in
+//            guard let tokenizedPayPalAccount = tokenizedPayPalAccount else {
+//                if let error = error {
+//                    // Handle error
+//                } else {
+//                    // User canceled
+//                }
+//                return
+//            }
+//            print("Got a nonce! \(tokenizedPayPalAccount.nonce)")
+//            var dataToSave: [[String:Any]] = [[:]]
+//            var count = 0
+//            var preData = [[String:Any]]()
+//            for product in self.products{
+//                count += 1
+//                let data = product.productDictionary as! [String:Any]
+//                    preData.append(data)
+//                if count == self.products.count{
+//                    dataToSave = preData
+//                }
+//            }
+//            
+//            let order = Order()
+//                        order.userId = FUser.currentId()
+//                        order.orderItems = dataToSave
+//                        order.shipping = self.shipping.shippingDictionary as! [String:Any]
+//                        order.itemsPrice = self.itemsPrice
+//                        order.shippingPrice = self.shippingPrice
+//                        order.taxPrice = self.taxPrice
+//                        order.totalPrice = self.paymentPrice
+//                        order.isPaid = true
+//                        order.payerID = tokenizedPayPalAccount.payerID ?? ""
+//                        order.orderID = tokenizedPayPalAccount.nonce
+//            print(order.payerID)
+//            FirestoreClass().setNewOder(order: order)
+//            self.goToOrderPage(order: order)
+//
+//    }
+//    }
+    @objc private func placeOrder(){
+        
+        //create new order
+        var dataToSave = [[String:Any]]()
+        var count = 0
+        var preData = [[String:Any]]()
+        for product in self.products{
+            count += 1
+            let data = product.productDictionary as! [String:Any]
+                preData.append(data)
+            if count == self.products.count{
+                dataToSave = preData
             }
-            print("Got a nonce! \(tokenizedPayPalAccount.nonce)")
-            var dataToSave: [[String:Any]] = [[:]]
-            var count = 0
-            var preData = [[String:Any]]()
-            for product in self.products{
-                count += 1
-                let data = product.productDictionary as! [String:Any]
-                    preData.append(data)
-                if count == self.products.count{
-                    dataToSave = preData
-                }
-            }
-            
-            let order = Order()
-                        order.userId = FUser.currentId()
-                        order.orderItems = dataToSave
-                        order.shipping = self.shipping.shippingDictionary as! [String:Any]
-                        order.itemsPrice = self.itemsPrice
-                        order.shippingPrice = self.shippingPrice
-                        order.taxPrice = self.taxPrice
-                        order.totalPrice = self.paymentPrice
-                        order.isPaid = true
-                        order.payerID = tokenizedPayPalAccount.payerID ?? ""
-                        order.orderID = tokenizedPayPalAccount.nonce
-            print(order.payerID)
-            FirestoreClass().setNewOder(order: order)
-            self.goToOrderPage(order: order)
-
+            //delete basket from firebase
+            removeBasketFromFirebase(productId: product.productId)
+        }
+        
+        let order = Order()
+                    order.userId = FUser.currentId()
+                    order.orderItems = dataToSave
+                    order.shipping = self.shipping.shippingDictionary as! [String:Any]
+                    order.itemsPrice = self.itemsPrice
+                    order.shippingPrice = self.shippingPrice
+                    order.taxPrice = self.taxPrice
+                    order.totalPrice = self.paymentPrice
+                    order.isPaid = false
+                    order.orderID = UUID().uuidString
+        //save order to firebase
+        FirestoreClass().setNewOder(order: order)
+        //go to order page to show order detail
+        self.goToOrderPage(order: order)
     }
+    private func removeBasketFromFirebase(productId:String){
+        FirestoreClass().downloadBasketFromFirebase(userId: FUser.currentId(), productId: productId) { (basket) in
+            if basket != nil{
+                FirestoreClass().deletBasketObject(basketId: basket!.id)
+            }
+        }
     }
     private func goToOrderPage(order:Order){
         let vc = PlaceOrderViewController()
